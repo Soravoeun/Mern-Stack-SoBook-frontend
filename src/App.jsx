@@ -29,7 +29,9 @@ function Template() {
   return (
     <>
       <NavBar />
-      <Outlet />
+      <div className="mt-20">
+        <Outlet />
+      </div>
     </>
   );
 }

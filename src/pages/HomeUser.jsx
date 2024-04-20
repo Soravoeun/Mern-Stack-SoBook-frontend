@@ -59,7 +59,7 @@ const HomeUser = () => {
 
   return (
     <div className="p-4 ">
-      <div className="flex justify-between items-center gap-x-4">
+      <div className="flex justify-between items-center gap-x-4 ">
         <h1 className="text-3xl my-8 m-8">Les Nouveautés</h1>
         {/* <MdOutlineAddBox className="text-4xl text-blue-500 cursor-pointer" /> */}
       </div>

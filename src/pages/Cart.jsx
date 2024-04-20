@@ -112,7 +112,7 @@ const Cart = () => {
         <div className="bg-white overflow-hidden shadow-xl sm:rounded-lg">
           <div className="p-6 sm:px-20 bg-white border-b border-gray-200 relative">
             <div className="flex items-center justify-between gap-2">
-              <MdShoppingCart className="text-3xl" />
+              <MdShoppingCart className="text-3xl  text-green-500" />
               <h1 className="text-3xl flex-grow">Panier de réservation</h1>
               {/* <button
                 type="button"

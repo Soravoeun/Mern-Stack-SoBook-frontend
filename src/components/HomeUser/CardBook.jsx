@@ -62,7 +62,7 @@ const CardBook = (props) => {
       <div
         // key={book._id}
         key={id}
-        className="max-w-xs bg-black shadow border-gray-100 rounded-lg  overflow-hidden dark:bg-gray-800 dark:border-gray-700 "
+        className=" w-auto bg-gray-700 shadow border-gray-100 rounded-lg  overflow-hidden dark:bg-gray-800 dark:border-gray-700 "
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         style={{ transform: hovered ? "scale(1.05)" : "scale(1)" }}
@@ -90,16 +90,12 @@ const CardBook = (props) => {
           </button>
         </div>
 
-        <div className="p-3">
-          <h5 className="mb-1 text-sm font-bold tracking-tight text-gray-900 dark:text-white">
+        <div className="p-3 text-white dark:text-white-300">
+          <h5 className="mb-1 text-sm font-bold tracking-tight">
             {book.title}
           </h5>
-          <p className="text-xs text-gray-600 dark:text-gray-300">
-            Auteur: {book.author}
-          </p>
-          <p className="text-xs text-gray-600 dark:text-gray-300">
-            Année de publication: {book.publishYear}
-          </p>
+          <p className="text-xs">Auteur: {book.author}</p>
+          <p className="text-xs">Année de publication: {book.publishYear}</p>
         </div>
         <div className="flex justify-between items-center gap-x-2  ">
           {/* Encadré bleu autour de l'icône BiShow */}

@@ -53,7 +53,7 @@ export default function BooksUser() {
         <div>
           <h1 className="text-3xl my-8">Tous les Livres</h1>
         </div>
-        <SearchBar setBooks={setBooks}/>
+        <SearchBar setBooks={setBooks} />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-5 m-5">
         {books.map((bookItem) => (

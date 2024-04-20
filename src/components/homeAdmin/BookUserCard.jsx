@@ -54,11 +54,14 @@ export default function BooksUserCard() {
   // };
 
   return (
-    <div className="  grid p-2.5 grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-5 m-5">
-      {/* Utilisation de map() pour itérer sur chaque livre */}
-      {books.map((bookItem) => (
-        <CardBook book={bookItem} key={bookItem._id} />
-      ))}
+    <div>
+      <div className="  grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-5 m-5 justify-center items-center">
+        {/* Utilisation de map() pour itérer sur chaque livre */}
+        {books.map((bookItem) => (
+          <CardBook book={bookItem} key={bookItem._id} />
+        ))}
+      </div>
+
       {showModal && (
         <BookModal book={bookSelected} onClose={() => setShowModal(false)} />
       )}
