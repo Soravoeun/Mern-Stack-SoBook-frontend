@@ -52,6 +52,7 @@
 import React, { useState } from "react";
 import BooksUserCard from "../components/homeAdmin/BookUserCard";
 import Spinner from "../components/Spinner";
+import SearchBar from "../components/SearchBar";
 
 const HomeUser = () => {
   const [books, setBooks] = useState([]);
@@ -59,11 +60,17 @@ const HomeUser = () => {
 
   return (
     <div className="p-4 ">
-      <div className="flex justify-between items-center gap-x-4 ">
-        <h1 className="text-3xl my-8 m-8">Les Nouveautés</h1>
-        {/* <MdOutlineAddBox className="text-4xl text-blue-500 cursor-pointer" /> */}
+      <div className="flex justify-between items-center gap-x-4">
+        <div>
+          <h1 className="text-3xl my-8 m-8">Les Nouveautés</h1>
+        </div>
+        {/* <SearchBar setBooks={setBooks} /> */}
       </div>
-      {loading ? <Spinner /> : <BooksUserCard />}
+      {loading ? (
+        <Spinner />
+      ) : (
+        <BooksUserCard />
+      )}
     </div>
   );
 };

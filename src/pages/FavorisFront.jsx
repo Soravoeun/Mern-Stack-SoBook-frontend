@@ -1,32 +1,29 @@
-import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { FaTimes } from "react-icons/fa";
-import CartModal from "../components/HomeUser/CartModal";
-import ErrorPage from "./ErrorPage";
 import { LoginContext } from "../App";
-import { MdShoppingCart } from "react-icons/md";
+import { useSnackbar } from "notistack";
+import { IoHeartCircleOutline } from "react-icons/io5";
 
-const Cart = () => {
-  const [books, setBooks] = useState([]);
-  const [open, setOpen] = useState(true);
-  const [isOpen, setIsOpen] = useState(false);
+function Favoris() {
   const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
+  const [favoriteBooks, setFavoriteBooks] = useState([]);
   const [checkoutDisabled, setCheckoutDisabled] = useState(true);
   const { currentLogin } = useContext(LoginContext);
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
-    loadBooks();
+    favorBooks();
   }, []);
 
-  const loadBooks = async () => {
+  const favorBooks = async () => {
     try {
-      const selectedBooks = localStorage.getItem("books")
-        ? localStorage.getItem("books").split(",")
+      const selectedBooks = localStorage.getItem("favoriteBooks")
+        ? localStorage.getItem("favoriteBooks").split(",")
         : [];
       const fetchedBooks = [];
       console.log(selectedBooks);
-
       for (let i = 0; i < selectedBooks.length; i++) {
         const id = selectedBooks[i];
         if (id !== "") {
@@ -37,110 +34,99 @@ const Cart = () => {
           fetchedBooks.push(response.data.data);
         }
       }
-      setBooks(fetchedBooks);
+      setFavoriteBooks(fetchedBooks);
       setCheckoutDisabled(selectedBooks.length === 0);
     } catch (error) {
       console.error("Error when fetching books:", error);
     }
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  const removeLikeFromCart = (id) => {
+    const storedLikeBooks = localStorage.getItem("favoriteBooks");
+    if (storedLikeBooks) {
+      try {
+        const currentLikeBooks = localStorage.getItem("favoriteBooks")
+          ? localStorage.getItem("favoriteBooks").split(",")
+          : [];
+        const updatedStoredBooks = currentLikeBooks.filter(
+          (bookId) => bookId !== id
+        );
+        if (updatedStoredBooks.length > 0) {
+          localStorage.setItem("favoriteBooks", updatedStoredBooks);
+        } else {
+          localStorage.removeItem("favoriteBooks");
+        }
+
+        console.log(updatedStoredBooks);
+        console.log(id);
+        favorBooks();
+      } catch (error) {
+        console.warn("No 'books' data found in localStorage.");
+      }
+    } else {
+      console.warn("No 'books' found.");
+    }
   };
 
-  const toggleModal = () => {
-    setIsOpen(!isOpen);
+  const moveToCart = (favoriteBooks) => {
+    if (currentLogin.isConnected) {
+      //   setFavoriteBooks([]);
+      //   toggleModal();
+      //   localStorage.removeItem("favoriteBooks");
+      //   setCheckoutDisabled(true);
+      try {
+        // source du produit à ajouter
+        const currentFavoriteBooks = localStorage.getItem("favoriteBooks")
+          ? localStorage.getItem("favoriteBooks").split(",")
+          : [];
+
+        // destination à ajouter les livres
+        const currentBooks = localStorage.getItem("books")
+          ? localStorage.getItem("books").split(",")
+            : [];
+          
+        for (let i = 0; i < currentFavoriteBooks.length; i++) {
+          // si livre n'est pas  dans le panier, ajoute le livre venant de la source.
+          if (!currentBooks.includes(currentFavoriteBooks[i])) {
+            currentBooks.push(currentFavoriteBooks[i]);
+          }
+        }
+        localStorage.setItem("books", currentBooks);
+        localStorage.removeItem("favoriteBooks");
+        setCheckoutDisabled(true);
+        enqueueSnackbar("Livres ajoutés au panier avec success", {
+          variant: "success",
+        });
+        navigate("/cart");
+      } catch (error) {
+        console.error("Error moving to cart:", error.message);
+        navigate("/error");
+      }
+    } else navigate("/error");
   };
 
   const handleContinueShopping = () => {
     navigate("/books/all");
   };
 
-  const removeFromCart = (id) => {
-    // Supprimer l'élément spécifique du panier
-    // setBooks((prevBooks) => {
-    //   const updatedBooks = prevBooks.filter((book) => book.id !== id);
-    //   return updatedBooks;
-    // });
-
-    // Mettre à jour le stockage local
-    //   const storedBooks = JSON.parse(localStorage.getItem("books"));
-    //   const updatedStoredBooks = storedBooks.filter((bookId) => bookId !== id);
-    //   localStorage.setItem("books", JSON.stringify(updatedStoredBooks));
-    // };
-
-    // Mettre à jour le stockage local
-    const storedBooks = localStorage.getItem("books");
-    console.log(storedBooks);
-    if (storedBooks) {
-      try {
-        const currentBooks = localStorage.getItem("books")
-          ? localStorage.getItem("books").split(",")
-          : [];
-        const updatedStoredBooks = currentBooks.filter(
-          (bookId) => bookId !== id
-        );
-        if (updatedStoredBooks.length > 0) {
-          localStorage.setItem("books", updatedStoredBooks);
-        } else {
-          localStorage.removeItem("books");
-        }
-
-        console.log(updatedStoredBooks);
-        console.log(id);
-        loadBooks();
-      } catch (error) {
-        console.error("Error parsing JSON from localStorage:", error);
-      }
-    } else {
-      console.warn("No 'books' data found in localStorage.");
-    }
+  const toggleModal = () => {
+    setIsOpen(!isOpen);
   };
-
-  const checkoutCart = async () => {
-    if (currentLogin.isConnected) {
-      const checkout = await axios.post(
-        "http://localhost:2468/reservation/books",
-        {
-          books: books,
-        },
-        {
-          headers: { Authorization: "Bearer " + localStorage.getItem("jwt") },
-        }
-      );
-      const checkoutResponse = checkout.data;
-      if (checkoutResponse.status === "OK") {
-        setBooks([]);
-        toggleModal();
-        localStorage.removeItem("books");
-        setCheckoutDisabled(true);
-      } 
-    } else navigate("/connexion");
-  };
-
+    
   return (
-    <div className="min-h-screen ">
+    <div className="min-h-screen">
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-          <div className="p-6 sm:px-20 bg-gray-300 border-b border-gray-200 relative">
+          <div className="p-6 sm:px-20  bg-gray-300 border-b border-gray-200 relative">
             <div className="flex items-center justify-between gap-2">
-              <MdShoppingCart className="text-3xl  text-green-500" />
-              <h1 className="text-3xl flex-grow">Panier de réservation</h1>
-              {/* <button
-                type="button"
-                className="relative -m-2 p-2 text-gray-400 hover:text-gray-500"
-                onClick={handleClose}
-              >
-                <span className="absolute -inset-0.5" />
-                <span className="sr-only">Close panel</span>
-                <FaTimes className="h-6 w-6" aria-hidden="true" />
-              </button> */}
+              <IoHeartCircleOutline className="text-3xl text-red-500" />
+              <h1 className=" text-3xl flex-grow">Favoris</h1>
             </div>
           </div>
           <div className="mt-8 mb-8">
             <div className="flow-root">
               <ul role="list" className="-my-6 divide-y divide-gray-200"></ul>
-              {books.map((book, key) => (
+              {favoriteBooks.map((book, key) => (
                 <li key={key} className="flex py-6 m-5">
                   <div className="h-24 w-24' flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                     <img
@@ -158,7 +144,7 @@ const Cart = () => {
 
                   <div className="flex">
                     <button
-                      onClick={() => removeFromCart(book._id)}
+                      onClick={() => removeLikeFromCart(book._id)}
                       type="button"
                       className="font-medium text-indigo-600 hover:text-indigo-500"
                     >
@@ -168,7 +154,6 @@ const Cart = () => {
                 </li>
               ))}
             </div>
-
             <div className="mt-6 flex justify-between items-center py-6 m-5">
               <p>
                 <button
@@ -176,18 +161,18 @@ const Cart = () => {
                   className="font-medium text-indigo-600 hover:text-indigo-500"
                   onClick={handleContinueShopping} // Utiliser la fonction handleContinueShopping pour la redirection
                 >
-                  <span aria-hidden="true"> &larr; </span>
                   Sélectionner d'autres livres
+                  <span aria-hidden="true"> &larr; </span>
                 </button>
               </p>
               <button
                 disabled={checkoutDisabled}
                 data-modal-target="static-modal"
                 data-modal-toggle="static-modal"
-                onClick={checkoutCart}
+                onClick={moveToCart}
                 className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 disabled:bg-gray-600"
               >
-                Valider le panier
+                Ajouter au panier
               </button>
 
               {/* <div className="mt-6 flex justify-center text-center text-sm text-gray-500"> */}
@@ -197,9 +182,8 @@ const Cart = () => {
           </div>
         </div>
       </div>
-      <CartModal isOpen={isOpen} toggleModal={toggleModal} />
     </div>
   );
-};
+}
 
-export default Cart;
+export default Favoris;

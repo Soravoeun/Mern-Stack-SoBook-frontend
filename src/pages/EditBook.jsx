@@ -65,7 +65,7 @@ const EditBook = () => {
           enqueueSnackbar("Book  Edited successfully", {
             variant: "success",
           });
-          navigate("/");
+          navigate("/books/operations");
         } else {
           enqueueSnackbar(response.data.message, { variant: "error" });
         }
