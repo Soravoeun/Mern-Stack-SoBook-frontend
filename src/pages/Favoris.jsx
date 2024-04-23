@@ -18,57 +18,66 @@ function Favoris() {
   }, []);
 
   const favorBooks = async () => {
+    const fetchedBooks = [];
     try {
-      const selectedBooks = localStorage.getItem("favoriteBooks")
-        ? localStorage.getItem("favoriteBooks").split(",")
-        : [];
-      const fetchedBooks = [];
-      console.log(selectedBooks);
-      for (let i = 0; i < selectedBooks.length; i++) {
-        const id = selectedBooks[i];
-        if (id !== "") {
-          const response = await axios.get(
-            `http://localhost:2468/books/oneBook/${id}`
-          );
-
-          fetchedBooks.push(response.data.data);
+      const favoriteBooks = await axios.get(
+        "http://localhost:2468/favorite/allBooks",
+        {
+          headers: { Authorization: "Bearer " + localStorage.getItem("jwt") },
         }
+      );
+      const favoriteBooksResponse = favoriteBooks.data;
+      if (favoriteBooksResponse.status === "OK") {
+        const selectedBooks = favoriteBooksResponse.data;
+        let currentBooks;
+        let currentBookResponse;
+        for (let i = 0; i < selectedBooks.length; i++) {
+          const id = selectedBooks[i].book;
+          if (id !== "") {
+            currentBooks = await axios.get(
+              `http://localhost:2468/books/oneBook/${id}`
+            );
+            currentBookResponse = currentBooks.data;
+            if (currentBookResponse.status === "OK") {
+              fetchedBooks.push(currentBookResponse.data);
+            } else {
+              navigate("/error");
+            }
+          }
+        }
+        setFavoriteBooks(fetchedBooks);
+        setCheckoutDisabled(selectedBooks.length === 0);
       }
-      setFavoriteBooks(fetchedBooks);
-      setCheckoutDisabled(selectedBooks.length === 0);
     } catch (error) {
       console.error("Error when fetching books:", error);
+      navigate("/error");
     }
   };
 
-  const removeLikeFromCart = (id) => {
-    const storedLikeBooks = localStorage.getItem("favoriteBooks");
-    if (storedLikeBooks) {
-      try {
-        const currentLikeBooks = localStorage.getItem("favoriteBooks")
-          ? localStorage.getItem("favoriteBooks").split(",")
-          : [];
-        const updatedStoredBooks = currentLikeBooks.filter(
-          (bookId) => bookId !== id
-        );
-        if (updatedStoredBooks.length > 0) {
-          localStorage.setItem("favoriteBooks", updatedStoredBooks);
+  const removeBookFromFavorite = async (id) => {
+    axios
+      .delete(`http://localhost:2468/favorite/delete/${id}`, {
+        headers: { Authorization: "Bearer " + localStorage.getItem("jwt") },
+      })
+      .then((dataResponse) => {
+        const response = dataResponse.data;
+        if (response.status === "OK") {
+          enqueueSnackbar("Livre supprimé avec success du favoris ", {
+            variant: "success",
+          });
+          favorBooks();
         } else {
-          localStorage.removeItem("favoriteBooks");
+          enqueueSnackbar(response.data.message, { variant: "error" });
         }
+      })
 
-        console.log(updatedStoredBooks);
-        console.log(id);
-        favorBooks();
-      } catch (error) {
-        console.warn("No 'books' data found in localStorage.");
-      }
-    } else {
-      console.warn("No 'books' found.");
-    }
+      .catch((error) => {
+        enqueueSnackbar("Error", { variant: "error" });
+        console.log(error);
+      });
   };
 
-  const moveToCart = (favoriteBooks) => {
+  const moveToCart = () => {
     if (currentLogin.isConnected) {
       //   setFavoriteBooks([]);
       //   toggleModal();
@@ -76,23 +85,24 @@ function Favoris() {
       //   setCheckoutDisabled(true);
       try {
         // source du produit à ajouter
-        const currentFavoriteBooks = localStorage.getItem("favoriteBooks")
-          ? localStorage.getItem("favoriteBooks").split(",")
-          : [];
+        const currentFavoriteBooks = favoriteBooks;
 
         // destination à ajouter les livres
         const currentBooks = localStorage.getItem("books")
           ? localStorage.getItem("books").split(",")
-            : [];
-          
+          : [];
+
         for (let i = 0; i < currentFavoriteBooks.length; i++) {
           // si livre n'est pas  dans le panier, ajoute le livre venant de la source.
-          if (!currentBooks.includes(currentFavoriteBooks[i])) {
-            currentBooks.push(currentFavoriteBooks[i]);
+          if (!currentBooks.includes(currentFavoriteBooks[i]._id)) {
+            currentBooks.push(currentFavoriteBooks[i]._id);
           }
         }
         localStorage.setItem("books", currentBooks);
-        localStorage.removeItem("favoriteBooks");
+        // supression de tous les livres une fois deplacé dans le panier 
+       for (let i = 0; i < currentFavoriteBooks.length; i++) {
+         removeBookFromFavorite(currentFavoriteBooks[i]._id); //
+       }
         setCheckoutDisabled(true);
         enqueueSnackbar("Livres ajoutés au panier avec success", {
           variant: "success",
@@ -112,12 +122,12 @@ function Favoris() {
   const toggleModal = () => {
     setIsOpen(!isOpen);
   };
-    
+
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen">
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-          <div className="p-6 sm:px-20 bg-white border-b border-gray-200 relative">
+          <div className="p-6 sm:px-20  bg-gray-300 border-b border-gray-200 relative">
             <div className="flex items-center justify-between gap-2">
               <IoHeartCircleOutline className="text-3xl text-red-500" />
               <h1 className=" text-3xl flex-grow">Favoris</h1>
@@ -144,7 +154,7 @@ function Favoris() {
 
                   <div className="flex">
                     <button
-                      onClick={() => removeLikeFromCart(book._id)}
+                      onClick={() => removeBookFromFavorite(book._id)}
                       type="button"
                       className="font-medium text-indigo-600 hover:text-indigo-500"
                     >

@@ -74,12 +74,16 @@ import { useParams, useNavigate } from "react-router-dom";
 import { LoginContext } from "../../App";
 import BackButton from "../BackButton";
 import ErrorPage from "../../pages/ErrorPage";
+import { IoHeartCircleOutline } from "react-icons/io5";
+import { useSnackbar } from "notistack";
 
 export default function BookDescription() {
   const { id } = useParams();
   const [book, setBook] = useState({});
   const navigate = useNavigate();
   const { currentLogin } = useContext(LoginContext);
+  const [liked, setLiked] = useState(false);
+   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     axios
@@ -101,7 +105,7 @@ export default function BookDescription() {
       if (!currentBooks.includes(id)) {
         currentBooks.push(id);
         localStorage.setItem("books", currentBooks);
-      } 
+      }
       navigate("/cart");
       // if (currentLogin.isConnected) navigate("/cart");
       // else navigate("/connexion");
@@ -110,16 +114,61 @@ export default function BookDescription() {
     }
   };
 
+  const handleFavorite = (book) => {
+    axios
+      .post(
+        "http://localhost:2468/favorite/book",
+        {
+          book: book._id,
+        },
+        {
+          headers: { Authorization: "Bearer " + localStorage.getItem("jwt") },
+        }
+      )
+      .then((dataResponse) => {
+        const response = dataResponse.data;
+        if (response.status === "OK") {
+          enqueueSnackbar("Livre ajouté  au favoris avec success ", {
+            variant: "success",
+          });
+          navigate("/favoris");
+        } else {
+          enqueueSnackbar(response.data.message, { variant: "error" });
+        }
+      })
+      .catch((error) => {
+        //   alert("An error happenned. please check console");
+        enqueueSnackbar("Error", { variant: "error" });
+        console.log(error);
+      });
+  };
+
   return (
-    <div className="p-6">
+    <div className="  p-6">
       <BackButton />
 
-      <div className="flex flex-col items-center m-8 bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-full p-8 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+      <div className=" relative flex flex-col items-center m-8 bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-full p-8 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
         <img
           className="object-cover w-full rounded-lg h-96 md:h-auto md:w-48 md:rounded-lg"
           src={book.image}
           alt={book.title}
         />
+
+        <button
+          onClick={() => {
+            handleFavorite(book);
+          }}
+          //   className="absolute top-0 right-0 px-1 py-1 text-xs font-medium text-white rounded-lg bg-transparent focus:ring-3 focus:outline-non"
+          // >
+          className="absolute top-0 right-0 mt-2 mr-2 px-1 py-1 text-xs font-medium text-white rounded-lg bg-transparent focus:ring-3 focus:outline-non"
+        >
+          <IoHeartCircleOutline
+            className={`text-3xl ${
+              liked ? "text-red-600" : "text-blue-400"
+            } hover:text-red-500`}
+          />
+        </button>
+
         <div className="flex flex-col justify-between p-4 leading-normal">
           <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
             {book.title}
@@ -128,10 +177,10 @@ export default function BookDescription() {
             {book.description}
           </p>
           <p className="text-gray-600 dark:text-gray-300">
-            Author: {book.author}
+            Auteur: {book.author}
           </p>
           <p className="text-gray-600 dark:text-gray-300">
-            Publish Year: {book.publishYear}
+            Date de publication: {book.publishYear}
           </p>
 
           <button

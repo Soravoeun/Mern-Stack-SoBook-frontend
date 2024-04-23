@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { IoReader } from "react-icons/io5";
 import { IoHeartCircleOutline } from "react-icons/io5";
+import { useSnackbar } from "notistack";
 
 import { CiRead } from "react-icons/ci";
 import BookModal from "../homeAdmin/BookModal";
@@ -21,7 +22,8 @@ const CardBook = (props) => {
   const [showModal, setShowModal] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [liked, setLiked] = useState(false);
-  const [favoriteBooks, setFavoriteBooks] = useState([]);
+
+  const { enqueueSnackbar } = useSnackbar();
 
   const handleSubmit = (book) => {
     // console.log(bookSelected);
@@ -41,20 +43,35 @@ const CardBook = (props) => {
     }
   };
 
-  const handleLike = (book) => {
-    try {
-      const like = localStorage.getItem("favoriteBooks")
-        ? localStorage.getItem("favoriteBooks").split(",")
-        : [];
-      if (!like.includes(book._id)) {
-        like.push(book._id);
-        localStorage.setItem("favoriteBooks", like);
-      }
-
-      navigate("/favoris");
-    } catch (error) {
-      console.error("Error like to cart:", error.message);
-    }
+  const handleFavorite = (book) => {
+    axios
+      .post(
+        "http://localhost:2468/favorite/book",
+        {
+          book: book._id,
+        },
+        {
+          headers: { Authorization: "Bearer " + localStorage.getItem("jwt") },
+        }
+      )
+      .then((dataResponse) => {
+        const response = dataResponse.data;
+        if (response.status === "OK") {
+          enqueueSnackbar("Livre ajouté au favoris avec success", {
+            variant: "success",
+          });
+          navigate("/favoris");
+        } else {
+          enqueueSnackbar(response.data.message, { variant: "error" });
+        }
+        setLoading(false);
+      })
+      .catch((error) => {
+        setLoading(false);
+        //   alert("An error happenned. please check console");
+        enqueueSnackbar("Error", { variant: "error" });
+        console.log(error);
+      });
   };
 
   return (
@@ -78,7 +95,7 @@ const CardBook = (props) => {
           </div>
           <button
             onClick={() => {
-              handleLike(book);
+              handleFavorite(book);
             }}
             className="absolute top-0 right-0 px-1 py-1 text-xs font-medium text-white rounded-lg bg-transparent focus:ring-3 focus:outline-non"
           >
@@ -95,7 +112,7 @@ const CardBook = (props) => {
             {book.title}
           </h5>
           <p className="text-xs">Auteur: {book.author}</p>
-          <p className="text-xs">Année de publication: {book.publishYear}</p>
+          <p className="text-xs">Date de publication: {book.publishYear}</p>
         </div>
         <div className="flex justify-between items-center gap-x-2  ">
           {/* Encadré bleu autour de l'icône BiShow */}
