@@ -14,7 +14,7 @@ const HomeAdmin = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get("http://localhost:2468/books/all")
+      .get(`${import.meta.env.VITE_API_URL}/books/all`)
       .then((res) => {
         setBooks(res.data.data);
         setLoading(false);

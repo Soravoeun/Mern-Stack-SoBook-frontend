@@ -27,7 +27,7 @@ const CreateBooks = () => {
     };
     setLoading(true);
     axios
-      .post("http://localhost:2468/books/create", data, {
+      .post(`${import.meta.env.VITE_API_URL}/books/create`, data, {
         headers: { Authorization: "Bearer " + localStorage.getItem("jwt") },
       })
       .then((dataResponse) => {

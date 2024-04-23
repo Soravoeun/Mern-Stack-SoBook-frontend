@@ -18,7 +18,7 @@ export default function BooksUser() {
   // Fetch all books
   useEffect(() => {
     axios
-      .get("http://localhost:2468/books/all")
+      .get(`${import.meta.env.VITE_API_URL}/books/all`)
       .then((dataResponse) => {
         const response = dataResponse.data;
         console.log(response.data);

@@ -100,7 +100,7 @@ const Cart = () => {
   const checkoutCart = async () => {
     if (currentLogin.isConnected) {
       const checkout = await axios.post(
-        "http://localhost:2468/reservation/books",
+        `${import.meta.env.VITE_API_URL}/reservation/books`,
         {
           books: books,
         },

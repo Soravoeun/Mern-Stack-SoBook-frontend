@@ -28,7 +28,7 @@ function Favoris() {
         const id = selectedBooks[i];
         if (id !== "") {
           const response = await axios.get(
-            `http://localhost:2468/books/oneBook/${id}`
+            `${import.meta.env.VITE_API_URL}/books/oneBook/${id}`
           );
 
           fetchedBooks.push(response.data.data);

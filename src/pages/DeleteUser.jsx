@@ -13,7 +13,7 @@ function DeleteUser() {
 
   const removeFromList = () => {
     axios
-      .delete(`http://localhost:2468/user/delete/${id}`, {
+      .delete(`${import.meta.env.VITE_API_URL}/user/delete/${id}`, {
         headers: { Authorization: "Bearer " + localStorage.getItem("jwt") },
       })
       .then((dataResponse) => {

@@ -23,7 +23,7 @@ export default function BooksUserCard() {
   // Fetch all books
   useEffect(() => {
     axios
-      .get("http://localhost:2468/books/all?order=desc&limit=5")
+      .get(`${import.meta.env.VITE_API_URL}/books/all?order=desc&limit=5`)
       .then((dataResponse) => {
         const response = dataResponse.data;
         console.log(response.data);
@@ -35,23 +35,6 @@ export default function BooksUserCard() {
         setLoading(false);
       });
   }, []);
-
-  // const handleSubmit = (book) => {
-  //   // console.log(bookSelected);
-  //   try {
-  //     const currentBooks = localStorage.getItem("books")
-  //       ? localStorage.getItem("books").split(",")
-  //       : [];
-  //     if (!currentBooks.includes(book._id)) {
-  //       currentBooks.push(book._id);
-  //       localStorage.setItem("books", currentBooks);
-  //     }
-  //     if (currentLogin.isConnected) navigate("/cart");
-  //     else navigate("/connexion");
-  //   } catch (error) {
-  //     console.error("Error saving to cart:", error.message);
-  //   }
-  // };
 
   return (
     <div>

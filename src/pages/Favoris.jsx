@@ -56,7 +56,7 @@ function Favoris() {
 
   const removeBookFromFavorite = async (id) => {
     axios
-      .delete(`http://localhost:2468/favorite/delete/${id}`, {
+      .delete(`${import.meta.env.VITE_API_URL}/favorite/delete/${id}`, {
         headers: { Authorization: "Bearer " + localStorage.getItem("jwt") },
       })
       .then((dataResponse) => {

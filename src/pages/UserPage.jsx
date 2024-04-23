@@ -19,7 +19,9 @@ const UserPage = () => {
 
   const fetchUser = async () => {
     try {
-      const response = await axios.get("http://localhost:2468/user/all");
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/user/all`
+      );
       setUsers(response.data);
     } catch (error) {
       console.log("Erreur lors de la récupération des utilisateurs");

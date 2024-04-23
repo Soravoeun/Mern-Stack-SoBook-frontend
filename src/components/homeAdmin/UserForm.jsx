@@ -15,7 +15,7 @@ function UserForm() {
   const createUser = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:2468/user/register`,
+        `${import.meta.env.VITE_API_URL}/user/register`,
         newUser
       );
       console.log(response.data); // Optionnel: Afficher la réponse de la requête POST

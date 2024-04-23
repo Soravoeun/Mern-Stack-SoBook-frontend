@@ -56,7 +56,7 @@ const EditBook = () => {
     };
     setLoading(true);
     axios
-      .put(`http://localhost:2468/books/update/${id}`, data, {
+      .put(`${import.meta.env.VITE_API_URL}/books/update/${id}`, data, {
         headers: { Authorization: "Bearer " + localStorage.getItem("jwt") },
       })
       .then((dataResponse) => {
