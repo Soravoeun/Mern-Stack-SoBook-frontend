@@ -25,7 +25,7 @@ export default function Register() {
         const response = dataResponse.data;
         console.log(response);
         if (response.status === "OK") {
-          enqueueSnackbar("Un Utilisateur a bien été ajouté avec succès", {
+          enqueueSnackbar("Un Utilisateur a bien créé avec succès", {
             variant: "success",
           });
           setNewUser({

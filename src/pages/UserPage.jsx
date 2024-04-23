@@ -26,13 +26,10 @@ const UserPage = () => {
     }
   };
 
-
-
   return (
     <div className="container mx-auto px-4 py-8">
       <h2 className="text-2xl font-bold mb-4">Liste des Utilisateurs :</h2>
       <UserList users={users} />
-     
     </div>
   );
 };

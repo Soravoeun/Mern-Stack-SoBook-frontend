@@ -51,7 +51,7 @@ export default function CartModal(props) {
                 {/* Corps de la modale */}
                 <div className="p-4 md:p-5 space-y-4">
                   <p className="text-base leading-relaxed text-gray-500">
-                    Votre réservation a été prise en compte.
+                    Votre réservation a été prise en compte. veuillez vérifier votre page de réservation
                   </p>
                 </div>
               </div>

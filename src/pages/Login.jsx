@@ -36,7 +36,7 @@ export default function Login() {
 
           setCurrentLogin({ isAdmin: isAdmin, isConnected: true });
 
-          navigate(-1);
+          navigate("/");
         } else {
           setError(response.data.message);
         }

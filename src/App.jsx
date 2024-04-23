@@ -22,6 +22,7 @@ import ErrorPage from "./pages/ErrorPage";
 import BooksUserCard from "./components/homeAdmin/BookUserCard";
 import BooksAdminList from "./components/homeAdmin/BooksAdminList";
 import Favoris from "./pages/Favoris";
+import Reservation from "./pages/Reservation";
 
 export const LoginContext = createContext(null);
 
@@ -29,7 +30,7 @@ function Template() {
   return (
     <>
       <NavBar />
-      <div className="mt-20">
+      <div className="mt-32">
         <Outlet />
       </div>
     </>
@@ -52,11 +53,10 @@ export default function App() {
           <>
             <Route element={<Template />}>
               <Route path="/error" element={<ErrorPage />} />
-
               <Route path="/" element={<HomeUser />} />
               <Route path="/books/all" element={<BooksUser />} />
               <Route path="/books/operations" element={<BooksAdminList />} />
-              <Route path="/books/adminCard" element={<BooksAdminCard />} />
+              {/* <Route path="/books/adminCard" element={<BooksAdminCard />} /> */}
               <Route path="/books/detail/:id" element={<ShowBook />} />
               <Route path="/books/create" element={<CreateBooks />} />
               <Route path="/books/edit/:id" element={<EditBook />} />
@@ -68,6 +68,11 @@ export default function App() {
               <Route path="/inscription" element={<Register />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/favoris" element={<Favoris />} />
+              <Route path="/reservation" element={<Reservation />} />
+              <Route
+                path="/books/description/:id"
+                element={<BookDescription />}
+              />
             </Route>
           </>
         ) : (
@@ -86,6 +91,7 @@ export default function App() {
               <Route path="/cart" element={<Cart />} />
               <Route path="/cardBook" element={<CardBook />} />
               <Route path="/favoris" element={<Favoris />} />
+              <Route path="/reservation" element={<Reservation />} />
             </Route>
           </>
         )}

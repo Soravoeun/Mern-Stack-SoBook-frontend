@@ -49,13 +49,13 @@ export default function BooksUser() {
   };
   return (
     <div className="p-4">
-      <div className="flex justify-between items-center gap-x-4 m-5">
+      <div className="flex justify-between items-center gap-x-4 m-4">
         <div>
           <h1 className="text-3xl my-8">Tous les Livres</h1>
         </div>
         <SearchBar setBooks={setBooks} />
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-5 m-5">
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-5 m-8">
         {books.map((bookItem) => (
           // ici book est le props venant du CarBook pour pouvoir appeler et utiliser les composants du card
           <CardBook book={bookItem} key={bookItem._id} />
