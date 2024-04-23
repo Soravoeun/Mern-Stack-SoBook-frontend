@@ -14,7 +14,7 @@ function Reservation() {
     const fetchedBooks = [];
     try {
       const reservationBooks = await axios.get(
-        "http://localhost:2468/reservation/allBooks",
+        `${import.meta.env.VITE_API_URL}/reservation/allBooks`,
         {
           headers: { Authorization: "Bearer " + localStorage.getItem("jwt") },
         }
@@ -28,7 +28,7 @@ function Reservation() {
           const id = selectedBooks[i].book;
           if (id !== "") {
             currentBook = await axios.get(
-              `http://localhost:2468/books/oneBook/${id}`
+              `${import.meta.env.VITE_API_URL}/books/oneBook/${id}`
             );
             currentBookResponse = currentBook.data;
             if (currentBookResponse.status === "OK") {
@@ -78,13 +78,13 @@ function Reservation() {
   const removeBookFromReservation = async (id) => {
     // Effectuer une requête DELETE vers l'API pour supprimer le livre de la réservation
     axios
-      .delete(`http://localhost:2468/reservation/delete/${id}`, {
+      .delete(`${import.meta.env.VITE_API_URL}/reservation/delete/${id}`, {
         headers: { Authorization: "Bearer " + localStorage.getItem("jwt") },
       })
       .then((dataResponse) => {
         const response = dataResponse.data;
         // Vérifier si la requête a réussi
-        console.log(response)
+        console.log(response);
         if (response.status === "OK") {
           // Si la suppression est réussie, afficher un message de succès
           console.log("Book removed successfully from reservation");

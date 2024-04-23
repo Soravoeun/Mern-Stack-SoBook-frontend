@@ -13,7 +13,7 @@ const ShowBook = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`http://localhost:2468/books/oneBook/${id}`)
+      .get(`${import.meta.env.VITE_API_URL}/books/oneBook/${id}`)
       .then((dataResponse) => {
         const response = dataResponse.data;
         console.log(response.data);
@@ -21,7 +21,7 @@ const ShowBook = () => {
         setLoading(false);
       })
       .catch((error) => {
-        <ErrorPage/>
+        <ErrorPage />;
         console.log(error);
         setLoading(false);
       });

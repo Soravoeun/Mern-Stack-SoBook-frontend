@@ -10,7 +10,7 @@ const BooksAdminCard = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get("http://localhost:2468/books/all")
+      .get(`${import.meta.env.VITE_API_URL}/books/all`)
       .then((response) => {
         setBooks(response.data.data.data);
         setLoading(false);

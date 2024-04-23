@@ -20,7 +20,7 @@ export default function Register() {
   const createUser = async (e) => {
     e.preventDefault();
     axios
-      .post("http://localhost:2468/user/inscription", newUser)
+      .post(`${import.meta.env.VITE_API_URL}/user/inscription`, newUser)
       .then((dataResponse) => {
         const response = dataResponse.data;
         console.log(response);

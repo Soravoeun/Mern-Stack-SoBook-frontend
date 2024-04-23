@@ -10,7 +10,9 @@ const SearchBar = ({ setBooks }) => {
 
   const handleSearch = () => {
     axios
-      .post("http://localhost:2468/books/search", { searchText: title })
+      .post(`${import.meta.env.VITE_API_URL}/books/search`, {
+        searchText: title,
+      })
       .then((dataResponse) => {
         const response = dataResponse.data;
         console.log(dataResponse);
