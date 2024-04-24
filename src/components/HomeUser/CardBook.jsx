@@ -46,7 +46,7 @@ const CardBook = (props) => {
   const handleFavorite = (book) => {
     axios
       .post(
-        "http://localhost:2468/favorite/book",
+        `${import.meta.env.VITE_API_URL}/favorite/book`,
         {
           book: book._id,
         },
