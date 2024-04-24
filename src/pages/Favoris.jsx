@@ -21,7 +21,7 @@ function Favoris() {
     const fetchedBooks = [];
     try {
       const favoriteBooks = await axios.get(
-        "http://localhost:2468/favorite/allBooks",
+        `${import.meta.env.VITE_API_URL}/favorite/allBooks`,
         {
           headers: { Authorization: "Bearer " + localStorage.getItem("jwt") },
         }
@@ -35,7 +35,7 @@ function Favoris() {
           const id = selectedBooks[i].book;
           if (id !== "") {
             currentBooks = await axios.get(
-              `http://localhost:2468/books/oneBook/${id}`
+              `${import.meta.env.VITE_API_URL}/books/oneBook/${id}`
             );
             currentBookResponse = currentBooks.data;
             if (currentBookResponse.status === "OK") {
