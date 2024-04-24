@@ -87,7 +87,7 @@ export default function BookDescription() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:2468/books/oneBook/${id}`)
+      .get(`${import.meta.env.VITE_API_URL}/books/oneBook/${id}`)
       .then((dataResponse) => {
         console.log(dataResponse);
         setBook(dataResponse.data.data);
@@ -117,7 +117,7 @@ export default function BookDescription() {
   const handleFavorite = (book) => {
     axios
       .post(
-        "http://localhost:2468/favorite/book",
+        `${import.meta.env.VITE_API_URL}/favorite/book`,
         {
           book: book._id,
         },

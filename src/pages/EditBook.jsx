@@ -19,7 +19,7 @@ const EditBook = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`http://localhost:2468/books/oneBook/${id}`)
+      .get(`${import.meta.env.VITE_API_URL}/books/oneBook/${id}`)
       .then((dataResponse) => {
         const response = dataResponse.data;
         if (response.status === "OK") {
