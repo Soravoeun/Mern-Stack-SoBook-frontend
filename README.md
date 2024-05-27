@@ -1,8 +1,25 @@
-# React + Vite
+# SoBook Reservation Online
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Description 
+This application allows users to search for books and make sure they can reserve before coming to take away.
 
-Currently, two official plugins are available:
+## Live Demo
+[https://mern-stack-so-book-frontend.vercel.app/](https://mern-stack-so-book-frontend.vercel.app/)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features 
+- Search for books by title or author
+- View detailed information about each book
+- Reserve books
+
+## Tech Stack
+- React
+- Vite
+- JavaScript
+- HTML
+- Tailwind CSS
+
+## Getting Started 
+1. Clone this repository
+2. Install dependencies by using `npm install -y`
+3. Create your own `.env` in the root of your application
+4. Run the application by using `npm run dev`
