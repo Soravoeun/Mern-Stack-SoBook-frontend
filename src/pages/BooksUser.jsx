@@ -53,6 +53,7 @@ export default function BooksUser() {
         <div>
           <h1 className="text-3xl my-8">Tous les Livres</h1>
         </div>
+         {/* filtrer les livres. Il reçoit une fonction setBooks comme prop pour mettre à jour la liste des livres affichés. */}
         <SearchBar setBooks={setBooks} />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-5 m-8">
@@ -63,6 +64,7 @@ export default function BooksUser() {
       </div>
 
       {showModal && (
+        // BookModal reçoit une prop book contenant les informations du livre sélectionné et une fonction onClose pour fermer le modal.
         <BookModal book={bookSelected} onClose={() => setShowModal(false)} />
       )}
     </div>
