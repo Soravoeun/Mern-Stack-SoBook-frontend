@@ -1,8 +1,10 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useSnackbar } from "notistack";
 
 function UserForm() {
+   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate("");
   const [newUser, setNewUser] = useState({
     firstName: "",
@@ -18,6 +20,7 @@ function UserForm() {
         `${import.meta.env.VITE_API_URL}/user/register`,
         newUser
       );
+      // response.data = {status: "OK", data: {...}}
       console.log(response.data); // Optionnel: Afficher la réponse de la requête POST
       setNewUser({
         firstName: "",
@@ -26,6 +29,9 @@ function UserForm() {
         zipcode: "",
         password: "",
       });
+      if (response.data.status === "KO") { 
+        enqueueSnackbar("User déjà enregistré", { variant: "error" });
+      }
       navigate("/users");
     } catch (error) {
       console.log("Erreur lors de la création de l'utilisateur :", error);

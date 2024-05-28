@@ -4,7 +4,6 @@ import { CiCircleRemove } from "react-icons/ci";
 
 
 function UserList({ users }) {
-  console.log(users);
   return (
     <div className=" w-full mx-auto px-4 py-8 sm:px-6 lg:px-8">
       <table className="w-full border-collapse divide-y divide-gray-200">
